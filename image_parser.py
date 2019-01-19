@@ -25,7 +25,7 @@ with open('urls.txt', 'w') as output:
 
 if input('Download images? [Yes/No]\n').lower() == 'yes':
 	target = input('Choose folder: ').replace(' ', r'\ ')
-	if re.search(r'\w+?', target) != None:
+	if re.search(r'\w+?', target):
 		os.system('mkdir ' + target)
 		for url in urls: os.system('cd %s; curl -LO %s' % (target, url))
 	else: print('Incorrect folder name')
