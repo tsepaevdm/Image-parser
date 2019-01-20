@@ -2,19 +2,22 @@ import re, os, time
 from urllib.parse import unquote
 from urllib.request import urlretrieve
 
-# try to open file using most common html encodings
-# assuming file page.html exists in the current folder
+# assuming file page.html exists in the current folder 
+# try to read it with the most common html encodings
+
 for encoding in ('utf-8', 'windows-1251', 'iso-8859-1'):
-	input_ = open('page.html', encoding = encoding)
 	try:
+		input_ = open('page.html', encoding = encoding)
 		raw_text = input_.read()
 		break
+	except FileNotFoundError: 
+		print("Error. Couldn't find file page.html")
 	except: continue
 	finally: input_.close()
 
-start = time.time()
+# urls must contain only safe characters and '%' in case of the percent-encoding
 
-# urls must contain only safe characters plus '%' in case of percent-encoding
+start = time.time()
 pattern = r"https?://[\w~?#!\[\]@'%/&()$.*:+,=;-]+?\.(?:gif|bmp|png|jpe?g)"
 urls = set(re.findall(pattern, raw_text))
 
