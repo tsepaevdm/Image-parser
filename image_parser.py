@@ -1,31 +1,34 @@
 import re, os, time
+from urllib.parse import unquote
+from urllib.request import urlretrieve
 
-encoding = 'utf-8'
-
-# fetch encoding from the file, utf-8 if none found
-with open('page.html') as file:
-	for line in file:
-		encoding_found = re.search('charset=.+?"', line)
-		if encoding_found:
-			encoding = encoding_found.group()[8:-1]
-			break
-
-# read text with a proper encoding
-with open('page.html', encoding = encoding) as file:
-	raw_text = file.read()
+# try to open file using most common html encodings
+# assuming file page.html exists in the current folder
+for encoding in ('utf-8', 'windows-1251', 'iso-8859-1'):
+	input_ = open('page.html', encoding = encoding)
+	try:
+		raw_text = input_.read()
+		break
+	except: continue
+	finally: input_.close()
 
 start = time.time()
-pattern = r"https?://[\w~?#!\[\]@'/&()$.*:+,=;-]+?\.(?:gif|bmp|png|jpe?g)"
-urls = re.findall(pattern, raw_text, flags=re.ASCII)
+
+# urls must contain only safe characters plus '%' in case of percent-encoding
+pattern = r"https?://[\w~?#!\[\]@'%/&()$.*:+,=;-]+?\.(?:gif|bmp|png|jpe?g)"
+urls = set(re.findall(pattern, raw_text))
 
 print('Found %d images in %.3f seconds' % (len(urls), time.time() - start))
 
-with open('urls.txt', 'w') as output: 
+with open('urls.txt', 'w') as output:
 	output.write('\n'.join(urls))
 
 if input('Download images? [Yes/No]\n').lower() == 'yes':
 	target = input('Choose folder: ').replace(' ', r'\ ')
-	if re.search(r'\w+?', target) != None:
-		os.system('mkdir ' + target)
-		for url in urls: os.system('cd %s; curl -LO %s' % (target, url))
+	if re.search(r'\w+?', target):
+		if not os.path.exists(target): os.mkdir(target)
+		print('Downloading...')
+		for url in urls:
+			path = target + '/' + unquote(url).split('/')[-1]
+			urlretrieve(url, path)
 	else: print('Incorrect folder name')
