@@ -28,8 +28,10 @@ if input('Download images? [Yes/No]\n').lower() == 'yes':
 	target = input('Choose folder: ').replace(' ', r'\ ')
 	if re.search(r'\w+?', target):
 		if not os.path.exists(target): os.mkdir(target)
-		print('Downloading...')
+		count = 0
 		for url in urls:
+			count += 1
+			print('Downloading %d/%d' % (count, len(urls)))
 			path = target + '/' + unquote(url).split('/')[-1]
 			urlretrieve(url, path)
 	else: print('Incorrect folder name')
