@@ -2,7 +2,7 @@ import re, os, time
 from urllib.parse import unquote
 from urllib.request import urlretrieve
 
-# assuming file page.html exists in the current folder 
+# assuming page.html exists in the current folder
 # try to read it with the most common html encodings
 
 for encoding in ('utf-8', 'windows-1251', 'iso-8859-1'):
@@ -10,8 +10,6 @@ for encoding in ('utf-8', 'windows-1251', 'iso-8859-1'):
 		input_ = open('page.html', encoding = encoding)
 		raw_text = input_.read()
 		break
-	except FileNotFoundError: 
-		print("Error. Couldn't find file page.html")
 	except: continue
 	finally: input_.close()
 
