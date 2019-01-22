@@ -4,7 +4,6 @@ from urllib.request import urlretrieve
 
 # assuming page.html exists in the current folder
 # try to read it with the most common html encodings
-
 for encoding in ('utf-8', 'windows-1251', 'iso-8859-1'):
 	try:
 		input_ = open('page.html', encoding = encoding)
@@ -15,11 +14,10 @@ for encoding in ('utf-8', 'windows-1251', 'iso-8859-1'):
 
 # urls must contain only safe characters and '%' in case of the percent-encoding
 
-start = time.time()
 pattern = r"https?://[\w~?#!\[\]@'%/&()$.*:+,=;-]+?\.(?:gif|bmp|png|jpe?g)"
+start = time.perf_counter()
 urls = set(re.findall(pattern, raw_text))
-
-print('Found %d images in %.3f seconds' % (len(urls), time.time() - start))
+print('Found %d images in %.3f seconds' % (len(urls), time.perf_counter() - start))
 
 with open('urls.txt', 'w') as output:
 	output.write('\n'.join(urls))
