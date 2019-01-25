@@ -25,16 +25,22 @@ with open('urls.txt', 'w') as output:
 	output.write('\n'.join(urls))
 
 def download_url(url):
-	global target
-	path = target + '/' + unquote(url).split('/')[-1]
-	urlretrieve(url, path)
+	global target, count
+	try: 
+		count += 1
+		print('\n[%d/%d]' % (count, len(urls)), end = '')
+		path = target + '/' + unquote(url).split('/')[-1]
+		urlretrieve(url, path)
+	except: print(' Error!', end = '')
+
 
 if input('Download images? [Yes/No]\n').lower() == 'yes':
 	target = input('Choose folder: ').replace(' ', r'\ ')
 	if re.search(r'\w+?', target):
 		if not os.path.exists(target): os.mkdir(target)
-		print('Downloading...')
 		start = time.perf_counter()
+		count = 0
+		print('Downloading...', end = '')
 		Pool(6).map(download_url, urls)
 		print('Done [%.3f seconds]' % (time.perf_counter() - start))
 	else: print('Incorrect folder name')
