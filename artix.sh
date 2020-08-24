@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PKGS = "base base-devel linux linux-firmware runit elogind-runit connman-runit nvim grub efibootmgr os-prober bash-completion git xorg xorg-server xorg-xinit firefox noto-fonts-cjk noto-fonts-emoji noto-fonts ttf-opensans ttf-hack"
+PKGS="base base-devel linux linux-firmware runit elogind-runit connman-runit nvim grub efibootmgr os-prober bash-completion git xorg xorg-server xorg-xinit firefox noto-fonts-cjk noto-fonts-emoji noto-fonts ttf-opensans ttf-hack"
 
 ln -s /etc/runit/sv/connmand /etc/runit/runsvdir/default
 pacman -S $PKGS --needed 
@@ -15,8 +15,9 @@ echo “LANG=en_GB.UTF-8” > /etc/locale.conf
 ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 echo artix > /etc/hostname
 useradd -m -g wheel dm
-cp /etc/pacman.d/gnupg/gpg.conf home/dm/.gnupg/ && echo keyserver pool.sks-keyservers.net >>  /home/dm/.gnupg/gpg.conf
-
+cd /home/dm
+mkdir .gnupg
+cp /etc/pacman.d/gnupg/gpg.conf .gnupg/ && echo keyserver pool.sks-keyservers.net >> .gnupg/gpg.conf
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
